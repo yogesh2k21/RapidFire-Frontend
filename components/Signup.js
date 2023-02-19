@@ -5,10 +5,11 @@ import {
   KeyboardAvoidingView,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Background from "./Background";
 import Field from "./Field";
 import { darkGreen, IP } from "./Constants";
+import { AsyncStorage } from "react-native";
 import Btn from "./Btn";
 import flush from "./Flush";
 
@@ -19,6 +20,21 @@ export default function Signup({ navigation }) {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [keyboardView, setkeyboardView] = useState({ enabled: "false" });
+
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      if (value !== null) {
+        navigation.navigate("LandingPage");
+        console.log(value);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    retrieveData();
+  }, [])
 
   const handleSignup = async () => {
     console.log("API hit");

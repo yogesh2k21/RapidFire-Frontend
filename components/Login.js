@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Background from "./Background";
 import Field from "./Field";
 import { darkGreen } from "./Constants";
@@ -13,16 +13,22 @@ export default function Login({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  // function validateEmail() {
-  //   var validRegex =
-  //     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
-  //   if (!email.match(validRegex)) {
-  //     alert("Valid email address!");
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  const retrieveData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("token");
+      if (value !== null) {
+        navigation.navigate("LandingPage");
+        console.log(value);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    retrieveData();
+  }, [])
+  
+  
 
   const storeData = async (key, value) => {
     try {
@@ -35,7 +41,7 @@ export default function Login({ navigation }) {
 
   const handleSubmit = async () => {
     console.log("API hit");
-    const URL = "http://"+IP+":8000/get_token/";
+    const URL = "http://" + IP + ":8000/get_token/";
     const response = await fetch(URL, {
       method: "POST",
       headers: {
@@ -57,7 +63,7 @@ export default function Login({ navigation }) {
     }
     // console.log(JSON.parse(res));
   };
-/*
+  /*
   const handleSubmit = async () => {
     console.log("API hit");
     const URL = "http://"+IP+":8000/room/submit_quiz/";
